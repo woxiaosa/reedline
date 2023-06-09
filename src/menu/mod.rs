@@ -105,7 +105,7 @@ pub trait Menu: Send {
     );
 
     /// Indicates how to replace in the line buffer the selected value from the menu
-    fn replace_in_buffer(&self, editor: &mut Editor);
+    fn replace_in_buffer(&self, editor: &mut Editor) -> bool;
 
     /// Calculates the real required lines for the menu considering how many lines
     /// wrap the terminal or if entries have multiple lines
@@ -292,8 +292,8 @@ impl Menu for ReedlineMenu {
         }
     }
 
-    fn replace_in_buffer(&self, editor: &mut Editor) {
-        self.as_ref().replace_in_buffer(editor);
+    fn replace_in_buffer(&self, editor: &mut Editor) -> bool {
+        self.as_ref().replace_in_buffer(editor)
     }
 
     fn menu_required_lines(&self, terminal_columns: u16) -> u16 {

@@ -650,7 +650,7 @@ impl Menu for ColumnarMenu {
     }
 
     /// The buffer gets replaced in the Span location
-    fn replace_in_buffer(&self, editor: &mut Editor) {
+    fn replace_in_buffer(&self, editor: &mut Editor) -> bool {
         if let Some(Suggestion {
             mut value,
             span,
@@ -671,6 +671,10 @@ impl Menu for ColumnarMenu {
             offset = offset.saturating_sub(end.saturating_sub(start));
             line_buffer.set_insertion_point(offset);
             editor.set_line_buffer(line_buffer, UndoBehavior::CreateUndoPoint);
+
+            true
+        } else {
+            false
         }
     }
 

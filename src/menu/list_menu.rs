@@ -466,7 +466,7 @@ impl Menu for ListMenu {
     }
 
     /// The buffer gets cleared with the actual value
-    fn replace_in_buffer(&self, editor: &mut Editor) {
+    fn replace_in_buffer(&self, editor: &mut Editor) -> bool {
         if let Some(Suggestion {
             mut value,
             span,
@@ -487,6 +487,10 @@ impl Menu for ListMenu {
             offset += value.len().saturating_sub(end.saturating_sub(start));
             line_buffer.set_insertion_point(offset);
             editor.set_line_buffer(line_buffer, UndoBehavior::CreateUndoPoint);
+
+            true
+        } else {
+            false
         }
     }
 

@@ -989,10 +989,13 @@ impl Reedline {
             {
                 for menu in self.menus.iter_mut() {
                     if menu.is_active() {
-                        menu.replace_in_buffer(&mut self.editor);
-                        menu.menu_event(MenuEvent::Deactivate);
-
-                        return Ok(EventStatus::Handled);
+                        if !menu.replace_in_buffer(&mut self.editor) {
+                            menu.menu_event(MenuEvent::Deactivate);
+                            return self.handle_editor_event(prompt, ReedlineEvent::Enter);
+                        } else {
+                            menu.menu_event(MenuEvent::Deactivate);
+                            return Ok(EventStatus::Handled);
+                        }
                     }
                 }
                 unreachable!()
@@ -1068,10 +1071,6 @@ impl Reedline {
                                             self.history.as_ref(),
                                         )
                                     {
-                                        if menu.get_values().len() == 1 {
-                                            return self
-                                                .handle_editor_event(prompt, ReedlineEvent::Enter);
-                                        }
                                         return Ok(EventStatus::Handled);
                                     }
                                 }
