@@ -853,10 +853,6 @@ impl Reedline {
                                 self.completer.as_mut(),
                                 self.history.as_ref(),
                             );
-
-                            if menu.get_values().len() == 1 {
-                                return self.handle_editor_event(prompt, ReedlineEvent::Enter);
-                            }
                         }
 
                         if self.partial_completions
@@ -1053,9 +1049,7 @@ impl Reedline {
                 if let Some(menu) = self.menus.iter_mut().find(|men| men.is_active()) {
                     if self.quick_completions && menu.can_quick_complete() {
                         match commands.first() {
-                            Some(&EditCommand::Backspace)
-                            | Some(&EditCommand::BackspaceWord)
-                            | Some(&EditCommand::MoveToLineStart) => {
+                            Some(&EditCommand::MoveToLineStart) => {
                                 menu.menu_event(MenuEvent::Deactivate)
                             }
                             _ => {
