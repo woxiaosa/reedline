@@ -1060,10 +1060,7 @@ impl Reedline {
                                     self.history.as_ref(),
                                 );
                                 if let Some(&EditCommand::Complete) = commands.first() {
-                                    if menu.get_values().len() == 1 {
-                                        return self
-                                            .handle_editor_event(prompt, ReedlineEvent::Enter);
-                                    } else if self.partial_completions
+                                    if self.partial_completions
                                         && menu.can_partially_complete(
                                             self.quick_completions,
                                             &mut self.editor,
@@ -1071,6 +1068,10 @@ impl Reedline {
                                             self.history.as_ref(),
                                         )
                                     {
+                                        if menu.get_values().len() == 1 {
+                                            return self
+                                                .handle_editor_event(prompt, ReedlineEvent::Enter);
+                                        }
                                         return Ok(EventStatus::Handled);
                                     }
                                 }
