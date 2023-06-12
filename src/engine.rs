@@ -1063,15 +1063,24 @@ impl Reedline {
                                     self.history.as_ref(),
                                 );
                                 if let Some(&EditCommand::Complete) = commands.first() {
-                                    if self.partial_completions
-                                        && menu.can_partially_complete(
+                                    if self.partial_completions {
+                                        if menu.can_partially_complete(
                                             self.quick_completions,
                                             &mut self.editor,
                                             self.completer.as_mut(),
                                             self.history.as_ref(),
-                                        )
-                                    {
-                                        return Ok(EventStatus::Handled);
+                                        ) {
+                                            return Ok(EventStatus::Handled);
+                                        } else {
+                                            menu.menu_event(MenuEvent::NextElement);
+                                            menu.update_working_details(
+                                                &mut self.editor,
+                                                self.completer.as_mut(),
+                                                self.history.as_ref(),
+                                                &self.painter,
+                                            );
+                                            return Ok(EventStatus::Handled);
+                                        }
                                     }
                                 }
                             }
